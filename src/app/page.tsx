@@ -24,7 +24,7 @@ const painPoints = [
         description: "Our powerful data scraping tool pulls targeted leads from Google Maps or SerpAPI, giving you a steady stream of potential customers in your city or town.",
         solution: "Scrape local businesses like AC repair or cleaning services with a few clicks and export to CSV/Excel for easy outreach.",
         icon: Search,
-        image: "https://placehold.co/600x400.png",
+        image: "https://ingenuitymarketing.com/wp-content/uploads/2020/10/ingWEB201022AttractingClients.jpg",
         imageHint: "map search",
     },
     {
