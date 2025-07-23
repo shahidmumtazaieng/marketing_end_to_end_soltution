@@ -31,7 +31,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'www.amendos.de',
+        hostname: 'www.leadsquared.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.dribbble.com',
         port: '',
         pathname: '/**',
       },

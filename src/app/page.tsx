@@ -40,7 +40,7 @@ const painPoints = [
         description: "Coordinating vendors and tracking orders is a headache. Our platform streamlines assignments and updates in real time.",
         solution: "Assign orders to vendors based on location, expertise, or workload, with a mobile app for seamless updates.",
         icon: Users,
-        image: "https://www.amendos.de/wp-content/uploads/2022/12/Providermanagement-Tools-%E2%80%93-ein-Vergleich_2-e1670499996827.jpg",
+        image: "https://www.leadsquared.com/wp-content/uploads/2023/11/A-guide-to-effective-vendor-management.png",
         imageHint: "team collaboration",
     },
     {
@@ -48,7 +48,7 @@ const painPoints = [
         description: "Creating branded invoices and collecting payments shouldn’t be complex. Our system makes it quick and professional.",
         solution: "Generate invoices with your logo, before/after images, and payment QR codes, shareable via WhatsApp or email.",
         icon: FileText,
-        image: "https://placehold.co/600x400.png",
+        image: "https://cdn.dribbble.com/userupload/12066392/file/original-6fb7ee6be315488265e2d7349dfc2465.jpg?resize=752x&vertical=center",
         imageHint: "invoice document",
     },
 ];
