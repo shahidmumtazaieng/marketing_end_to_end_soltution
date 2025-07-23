@@ -172,7 +172,7 @@ export default function LandingPage() {
                     <h1 
                         className="text-4xl sm:text-5xl md:text-6xl font-bold font-headline tracking-tight animated-gradient-text"
                     >
-                        The End-to-End Solution for Service Automation
+                        The End-to-End Solution through AI Agents
                     </h1>
                     <p className="mt-6 text-lg text-muted-foreground">
                         Effortlessly find leads, automate customer calls, manage vendors, and generate professional bills—all in one platform.
