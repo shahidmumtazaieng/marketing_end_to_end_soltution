@@ -32,7 +32,7 @@ const painPoints = [
         description: "Cold calling takes hours and feels repetitive. Let our AI calling agent handle it with your voice or professional pre-built voices.",
         solution: "Automate calls with a cloned voice or select from male/female options, supporting multiple languages for personalized outreach.",
         icon: PhoneForwarded,
-        image: "https://placehold.co/600x400.png",
+        image: "https://assets.mailshake.com/wp-content/uploads/2021/12/10084201/1489380_Blog-Image_9_110922.jpg",
         imageHint: "call center",
     },
     {
@@ -40,7 +40,7 @@ const painPoints = [
         description: "Coordinating vendors and tracking orders is a headache. Our platform streamlines assignments and updates in real time.",
         solution: "Assign orders to vendors based on location, expertise, or workload, with a mobile app for seamless updates.",
         icon: Users,
-        image: "https://placehold.co/600x400.png",
+        image: "https://www.amendos.de/wp-content/uploads/2022/12/Providermanagement-Tools-%E2%80%93-ein-Vergleich_2-e1670499996827.jpg",
         imageHint: "team collaboration",
     },
     {
