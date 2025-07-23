@@ -1,0 +1,27 @@
+# **App Name**: LeadFlow Central
+
+## Core Features:
+
+- Authentication and Onboarding: Secure authentication using Firebase Authentication (email/password, Google SSO); Admins provide business details (name, address, logo) and payment information for subscription (7-day free trial, then $15/month); Generate a unique referral ID (e.g., UUID) for each admin upon account creation, used for vendor onboarding; Admins have full access to the dashboard; vendors (via Android app) have restricted access based on admin's referral ID.
+- Analytics Dashboard: Metrics: Display total orders, vendors, call success rates, revenue, and pending tasks. Filters: Filter by vendor, order status, date, or location. Visualizations: Charts for call performance, order completion rates, and vendor activity (using Chart.js or Firebase-integrated analytics).
+- Business Data Scraper: Scrape business data from Google Maps using the Google Maps API based on location and business type inputs; Export the scraped data to CSV.
+- AI-Powered Calling Agent: Integrate Twilio and ElevenLabs for automated calling, supporting voice personas; utilize configured LLM APIs for Retrieval Augmented Generation (RAG) to provide the AI tool with reasoning when incorporating data into its responses; conversation synching with google sheets API
+- Vendor Management: Vendor onboarding: Vendors register via the Android app using the admin's referral ID. Vendor Profiles: Store and display vendor details (name, contact, verification status). Analytics: Show vendor performance (total orders, completed, pending, canceled) in the admin dashboard. Management Actions: Options to ban, block, or unblock vendors.
+- Order Management: Order Creation: Assign tasks to vendors based on location or sequence (similar to Uber/Foodpanda). Order Status: Track orders (Pending, Accepted, On the Way, Completed, Canceled). Conversation-Based Updates: Extract booking or visit details (e.g., AC repair, electrician, cleaning service) from call summaries and update order status. Notifications: Send real-time notifications to the Android app for vendors when order status changes (via Firebase Cloud Messaging).
+- Billing and Payments: Subscription management with a 7-day free trial and $15/month billing using Stripe or PayPal.
+- API Configuration: Secure API configuration to allow admins to configure their own keys for Google Maps, Twilio, ElevenLabs and LLM APIs (OpenAI, Gemini, Claude, Grok) to allow the AI tool access to the external services it needs; provide webhooks to allow access to n8n, etc.
+- Custom Billing Settings: Admins can set business name, address, logo, payment details (bank, QR code), and service details for auto-generated bills.
+- Bill Generation: Create bills with order details, images (before/after work), and payment QR code, shareable via WhatsApp, email, or other platforms.
+- Payment Gateways: Support for admin-configured payment gateways (e.g., Stripe, PayPal).
+- Calling Agent Management: Agent Configuration: Select conversation language (e.g., English, Spanish, etc.). Input welcome message or call title. Upload knowledge base (text files or URLs) for RAG system. Enable/disable RAG for conversation context. Select agent persona (e.g., male/female voice via ElevenLabs API). API Integrations: Twilio: For phone number onboarding and call automation. ElevenLabs: For voice-based conversation with customizable personas. LLM APIs: Options to configure OpenAI, Gemini, Claude, or Grok for RAG-based conversations. Webhook Support: Allow integration with tools like n8n for automation. Conversation Sync: Sync call data (contact details, conversation summary, call status, follow-up time, booking details) to Google Sheets via Google Sheets API. Analytics Dashboard: Display call metrics (e.g., total calls, successful calls, bookings, follow-ups).
+- Data Scraping (Google Maps): UI Interface: Provide a user-friendly interface to search or filter businesses by: Location (country, city, town, village). Business type (e.g., hotels, restaurants, offices, shops, villas). Google Maps API Integration: Use Google Maps Places API to scrape business details (name, address, phone, email, website, category). Export Options: Export scraped data to CSV/Excel with customizable parameters (e.g., name, address, phone, category, location). Storage: Store scraped data in Firebase Firestore for further processing.
+
+## Style Guidelines:
+
+- Primary color: HSL(210, 70%, 50%) - RGB(45, 136, 214) A vibrant blue to represent trust, technology, and forward-thinking solutions, aligning with the business and analytical focus of the application.
+- Background color: HSL(210, 20%, 95%) - RGB(242, 245, 248) - A very light blue that maintains a clean, professional, and calm environment.
+- Accent color: HSL(180, 60%, 40%) - RGB(41, 204, 181) - A bright aquamarine that contrasts clearly with the primary hue and adds a touch of freshness.
+- Headline font: 'Space Grotesk' sans-serif for headlines and short amounts of body text; Body font: 'Inter' sans-serif for longer text.
+- Simple, geometric icons that reflect a tech-forward, efficient approach to business management. Icons should be monochromatic with the accent color.
+- Clean and structured layout with clear data visualization to highlight key metrics. Use card-based designs to organize information.
+- Subtle transitions and animations on data updates to enhance user engagement without distracting from the analytical workflow.
