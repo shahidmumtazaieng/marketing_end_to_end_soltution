@@ -39,33 +39,13 @@ async function scrapeWithSerpApi(apiKey: string, query: string, location: string
 }
 
 async function scrapeWithGoogleMaps(apiKey: string, query: string, location: string) {
-  const textQuery = `${query} in ${location}`;
-  const fields = 'places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.primaryType';
-  const url = `https://places.googleapis.com/v1/places:searchText`;
-
-  const response = await axios.post(url, 
-    {
-      textQuery: textQuery,
-      languageCode: 'en',
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Goog-Api-Key': apiKey,
-        'X-Goog-FieldMask': fields,
-      },
-    }
-  );
-
-  if (response.data && response.data.places) {
-    return response.data.places.map((place: any) => ({
-      name: place.displayName,
-      address: place.formattedAddress,
-      phone: place.nationalPhoneNumber,
-      category: place.primaryType,
-    }));
-  }
-  return [];
+  // Placeholder for Google Maps API implementation
+  console.log("Scraping with Google Maps (placeholder)...");
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  return [
+    { name: "Google Maps Cafe (Sample)", address: "123 Google Way", phone: "555-0100", category: "Cafe" },
+    { name: "Google Maps Pizza (Sample)", address: "456 Google Rd", phone: "555-0101", category: "Pizza" },
+  ];
 }
 
 
