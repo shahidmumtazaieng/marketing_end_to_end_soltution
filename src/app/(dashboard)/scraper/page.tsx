@@ -1,6 +1,6 @@
 
 'use client';
-import { useActionState, useEffect, useState, useTransition } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,11 +22,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { scrapeDataAction } from './actions';
-import { Download, Loader2, Search, Key, Pencil, Check, Trash2, PlusCircle, History } from 'lucide-react';
+import { Download, Loader2, Search, Key, Pencil, Check, History } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LocationSelector } from '@/components/location-selector';
-import { Badge } from '@/components/ui/badge';
+import { BusinessTypeSelector } from '@/components/business-type-selector';
 
 const initialState = {
   message: '',
@@ -46,7 +46,6 @@ function SubmitButton() {
 }
 
 const initialExportHistory: { filename: string; date: string; recordCount: number; }[] = [];
-const initialBusinessTargets: string[] = ['Restaurants', 'Hotels', 'Plumbers'];
 
 export default function ScraperPage() {
   const [state, formAction] = useActionState(scrapeDataAction, initialState);
@@ -59,8 +58,6 @@ export default function ScraperPage() {
   const [scrapedInput, setScrapedInput] = useState<{city?: string, businessType?: string} | null>(null);
 
   const [exportHistory, setExportHistory] = useState(initialExportHistory);
-  const [businessTargets, setBusinessTargets] = useState(initialBusinessTargets);
-  const [newTarget, setNewTarget] = useState('');
 
   useEffect(() => {
     const savedGoogleKey = localStorage.getItem('googleApiKey') || '';
@@ -71,11 +68,6 @@ export default function ScraperPage() {
     if (savedHistory) {
       setExportHistory(JSON.parse(savedHistory));
     }
-    const savedTargets = localStorage.getItem('scraperBusinessTargets');
-    if (savedTargets) {
-      setBusinessTargets(JSON.parse(savedTargets));
-    }
-
   }, []);
   
   useEffect(() => {
@@ -142,23 +134,6 @@ export default function ScraperPage() {
     toast({ title: "Exported successfully!" });
   };
 
-  const addBusinessTarget = () => {
-    if (newTarget && !businessTargets.includes(newTarget)) {
-        const updatedTargets = [...businessTargets, newTarget];
-        setBusinessTargets(updatedTargets);
-        localStorage.setItem('scraperBusinessTargets', JSON.stringify(updatedTargets));
-        setNewTarget('');
-        toast({ title: `Added "${newTarget}" to targets.`});
-    }
-  }
-
-  const removeBusinessTarget = (targetToRemove: string) => {
-    const updatedTargets = businessTargets.filter(t => t !== targetToRemove);
-    setBusinessTargets(updatedTargets);
-    localStorage.setItem('scraperBusinessTargets', JSON.stringify(updatedTargets));
-    toast({ title: `Removed "${targetToRemove}".`, variant: 'destructive' });
-  }
-
   return (
     <div className="grid gap-8 lg:grid-cols-3">
       <div className="lg:col-span-1 space-y-8">
@@ -187,18 +162,9 @@ export default function ScraperPage() {
 
               <LocationSelector />
 
-              <div className="space-y-2">
-                <Label htmlFor="businessType">Business Type</Label>
-                <Input id="businessType" name="businessType" placeholder="e.g., Restaurants, Hotels" required />
-                {state.errors?.businessType && <p className="text-sm text-destructive">{state.errors.businessType[0]}</p>}
-              </div>
-               <div className="flex flex-wrap gap-2 pt-2">
-                    {businessTargets.map(target => (
-                        <Badge key={target} variant="secondary" className="cursor-pointer" onClick={() => (document.getElementById('businessType') as HTMLInputElement).value = target}>
-                            {target}
-                        </Badge>
-                    ))}
-                </div>
+              <BusinessTypeSelector />
+              {state.errors?.businessType && <p className="text-sm text-destructive">{state.errors.businessType[0]}</p>}
+
             </CardContent>
             <CardFooter>
               <SubmitButton />
@@ -245,34 +211,6 @@ export default function ScraperPage() {
                     <Button size="icon" variant="outline" onClick={() => setEditingKey('serp')}><Pencil className="h-4 w-4" /></Button>
                     )}
                 </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card>
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2">Business Target List</CardTitle>
-                <CardDescription>Manage your saved business type keywords.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="flex items-center gap-2">
-                    <Input 
-                        placeholder="Add new business type" 
-                        value={newTarget}
-                        onChange={(e) => setNewTarget(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && addBusinessTarget()}
-                    />
-                    <Button size="icon" onClick={addBusinessTarget}><PlusCircle className="h-4 w-4" /></Button>
-                </div>
-                <div className="space-y-2">
-                    {businessTargets.map(target => (
-                        <div key={target} className="flex items-center justify-between p-2 bg-muted rounded-md">
-                            <span className="text-sm font-medium">{target}</span>
-                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => removeBusinessTarget(target)}>
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                        </div>
-                    ))}
                 </div>
             </CardContent>
         </Card>
