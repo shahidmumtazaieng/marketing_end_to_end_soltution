@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 import axios from 'axios';
+import { revalidatePath } from 'next/cache';
 
 const ScrapeSchema = z.object({
   country: z.string().min(1, "Country is required."),
@@ -118,6 +119,8 @@ export async function scrapeDataAction(prevState: any, formData: FormData) {
             input: { city, businessType }
         }
     }
+    
+    revalidatePath('/scraper');
 
     return {
       errors: {},
@@ -138,11 +141,17 @@ export async function scrapeDataAction(prevState: any, formData: FormData) {
   }
 }
 
+const csc_api_key = process.env.COUNTRY_STATE_CITY_API_KEY;
+
 // Actions for location dropdowns
 export async function getCountries() {
+    if (!csc_api_key) {
+        console.error("COUNTRY_STATE_CITY_API_KEY is not set.");
+        return [];
+    }
     try {
         const response = await axios.get('https://api.countrystatecity.in/v1/countries', {
-            headers: { 'X-CSCAPI-KEY': process.env.COUNTRY_STATE_CITY_API_KEY }
+            headers: { 'X-CSCAPI-KEY': csc_api_key }
         });
         return response.data;
     } catch (error) {
@@ -152,9 +161,13 @@ export async function getCountries() {
 }
 
 export async function getStatesOfCountry(countryIso2: string) {
+    if (!csc_api_key) {
+        console.error("COUNTRY_STATE_CITY_API_KEY is not set.");
+        return [];
+    }
     try {
         const response = await axios.get(`https://api.countrystatecity.in/v1/countries/${countryIso2}/states`, {
-            headers: { 'X-CSCAPI-KEY': process.env.COUNTRY_STATE_CITY_API_KEY }
+            headers: { 'X-CSCAPI-KEY': csc_api_key }
         });
         return response.data;
     } catch (error) {
@@ -164,9 +177,13 @@ export async function getStatesOfCountry(countryIso2: string) {
 }
 
 export async function getCitiesOfState(countryIso2: string, stateIso2: string) {
+    if (!csc_api_key) {
+        console.error("COUNTRY_STATE_CITY_API_KEY is not set.");
+        return [];
+    }
     try {
         const response = await axios.get(`https://api.countrystatecity.in/v1/countries/${countryIso2}/states/${stateIso2}/cities`, {
-            headers: { 'X-CSCAPI-KEY': process.env.COUNTRY_STATE_CITY_API_KEY }
+            headers: { 'X-CSCAPI-KEY': csc_api_key }
         });
         return response.data;
     } catch (error) {
