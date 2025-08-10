@@ -12,7 +12,7 @@ const ScrapeSchema = z.object({
   city: z.string().optional(),
   businessType: z.string().min(1, "Business type is required."),
   provider: z.enum(['google-maps', 'serpapi']),
-  apiKey: z.string().min(1, "API Key is required."),
+  apiKey: z.string(), // Can be empty, we check it manually
 });
 
 // Helper functions for scraping
@@ -111,7 +111,7 @@ export async function scrapeDataAction(prevState: any, formData: FormData) {
 
   } catch (error: any) {
     console.error("Scraping error:", error);
-    const errorMessage = error.response?.data?.error_message || error.response?.data?.error?.message || error.message || "An unknown error occurred.";
+    const errorMessage = error.response?.data?.error_message || error.response?.data?.error || "An unknown error occurred.";
     return {
       errors: {},
       message: `Scraping failed: ${errorMessage}`,
