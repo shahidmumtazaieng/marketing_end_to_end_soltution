@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -40,6 +40,7 @@ export type Vendor = {
   id: string;
   name: string;
   contact: string;
+  phone?: string;
   status: VendorStatus;
   avatar: string;
   memberSince: string;
@@ -55,82 +56,202 @@ export type Vendor = {
     longitude: number;
   };
   activeOrders: number;
+  uniqueVendorId?: string;
+  registeredViaApp?: boolean;
+  isOnline?: boolean;
+  lastSeen?: string;
+  verifiedAt?: string;
+  verifiedBy?: string;
 };
 
-const vendors: Vendor[] = [
-  {
-    id: 'VEND001',
-    name: 'John Doe',
-    contact: 'john.d@example.com',
-    status: 'Verified',
-    avatar: 'https://placehold.co/100x100.png',
-    memberSince: '2023-01-15',
-    orders: { total: 120, completed: 115, pending: 2, canceled: 3 },
-    services: ['AC Repair', 'Plumbing'],
-    location: { latitude: 40.7128, longitude: -74.0060 }, // New York City
-    activeOrders: 1,
-  },
-  {
-    id: 'VEND002',
-    name: 'Jane Smith',
-    contact: 'jane.s@example.com',
-    status: 'Pending',
-    avatar: 'https://placehold.co/100x100.png',
-    memberSince: '2024-06-20',
-    orders: { total: 50, completed: 45, pending: 5, canceled: 0 },
-    services: ['Electrician Services'],
-    location: { latitude: 34.0522, longitude: -118.2437 }, // Los Angeles
-    activeOrders: 3,
-  },
-  {
-    id: 'VEND003',
-    name: 'CleanCo',
-    contact: 'contact@cleanco.com',
-    status: 'Verified',
-    avatar: 'https://placehold.co/100x100.png',
-    memberSince: '2022-08-10',
-    orders: { total: 250, completed: 240, pending: 1, canceled: 9 },
-    services: ['Home Cleaning'],
-    location: { latitude: 41.8781, longitude: -87.6298 }, // Chicago
-    activeOrders: 0,
-  },
-  {
-    id: 'VEND004',
-    name: 'Mike Rowe',
-    contact: 'mike.r@example.com',
-    status: 'Blocked',
-    avatar: 'https://placehold.co/100x100.png',
-    memberSince: '2023-11-05',
-    orders: { total: 30, completed: 20, pending: 0, canceled: 10 },
-    services: ['Plumbing', 'Handyman'],
-    location: { latitude: 29.7604, longitude: -95.3698 }, // Houston
-    activeOrders: 0,
-  },
-   {
-    id: 'VEND005',
-    name: 'Alpha Services',
-    contact: 'support@alphaservices.com',
-    status: 'Verified',
-    avatar: 'https://placehold.co/100x100.png',
-    memberSince: '2021-03-12',
-    orders: { total: 500, completed: 490, pending: 5, canceled: 5 },
-    services: ['Pest Control', 'Landscaping', 'AC Repair'],
-    location: { latitude: 40.7500, longitude: -73.9900 }, // Near NYC
-    activeOrders: 2,
-  },
-  {
-    id: 'VEND006',
-    name: 'Beta Repairs',
-    contact: 'help@betarepairs.net',
-    status: 'Pending',
-    avatar: 'https://placehold.co/100x100.png',
-    memberSince: '2024-07-01',
-    orders: { total: 10, completed: 2, pending: 8, canceled: 0 },
-    services: ['Appliance Repair', 'Electrician Services'],
-    location: { latitude: 34.0122, longitude: -118.2937 }, // Near LA
-    activeOrders: 5,
-  },
-];
+// Real-time vendors data from database
+const [vendors, setVendors] = useState<Vendor[]>([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
+const [uniqueVendorIds, setUniqueVendorIds] = useState<any[]>([]);
+
+// Mock user ID - in real app, get from auth context
+const userId = 'user-123';
+
+// Fetch vendors and unique IDs on component mount
+useEffect(() => {
+  fetchVendors();
+  fetchUniqueVendorIds();
+}, []);
+
+// Fetch vendors from database
+const fetchVendors = async () => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const response = await fetch(`/api/vendors?user_id=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.success) {
+      setVendors(result.data);
+      console.log(`✅ Loaded ${result.data.length} vendors from database`);
+    } else {
+      throw new Error(result.message || 'Failed to fetch vendors');
+    }
+  } catch (error) {
+    console.error('Error fetching vendors:', error);
+    setError(error instanceof Error ? error.message : 'Failed to fetch vendors');
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      description: 'Failed to load vendors. Please try again.',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Fetch unique vendor IDs
+const fetchUniqueVendorIds = async () => {
+  try {
+    const response = await fetch(`/api/vendors/validate-id?user_id=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success) {
+        setUniqueVendorIds(result.data);
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching unique vendor IDs:', error);
+  }
+};
+
+// Generate unique vendor ID
+const generateUniqueVendorId = async () => {
+  try {
+    const response = await fetch('/api/vendors', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id: userId }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.success) {
+      toast({
+        title: 'Success',
+        description: `Unique vendor ID generated: ${result.data.unique_id}`,
+      });
+
+      // Refresh unique vendor IDs list
+      fetchUniqueVendorIds();
+
+      return result.data.unique_id;
+    } else {
+      throw new Error(result.message || 'Failed to generate unique vendor ID');
+    }
+  } catch (error) {
+    console.error('Error generating unique vendor ID:', error);
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      description: 'Failed to generate unique vendor ID. Please try again.',
+    });
+  }
+};
+
+// Update vendor status
+const updateVendorStatus = async (vendorId: string, status: 'pending' | 'verified' | 'blocked') => {
+  try {
+    const response = await fetch(`/api/vendors/${vendorId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        status: status,
+        verified_by: status === 'verified' ? userId : undefined,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.success) {
+      toast({
+        title: 'Success',
+        description: `Vendor status updated to ${status}`,
+      });
+
+      // Refresh vendors list
+      fetchVendors();
+    } else {
+      throw new Error(result.message || 'Failed to update vendor status');
+    }
+  } catch (error) {
+    console.error('Error updating vendor status:', error);
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      description: 'Failed to update vendor status. Please try again.',
+    });
+  }
+};
+
+// Delete vendor
+const deleteVendor = async (vendorId: string) => {
+  try {
+    const response = await fetch(`/api/vendors/${vendorId}/status?user_id=${userId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.success) {
+      toast({
+        title: 'Success',
+        description: 'Vendor deleted successfully',
+      });
+
+      // Refresh vendors list
+      fetchVendors();
+    } else {
+      throw new Error(result.message || 'Failed to delete vendor');
+    }
+  } catch (error) {
+    console.error('Error deleting vendor:', error);
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      description: 'Failed to delete vendor. Please try again.',
+    });
+  }
+};
 
 
 const statusConfig: Record<VendorStatus, { icon: React.ElementType, color: string, variant: 'outline' | 'secondary' | 'destructive' }> = {

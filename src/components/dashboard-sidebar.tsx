@@ -15,6 +15,7 @@ import {
   Briefcase,
   FileCog,
   Contact,
+  Key,
 } from 'lucide-react';
 import {
   Accordion,
@@ -28,10 +29,14 @@ const navItems = [
 ];
 
 const callingAgentItems = [
+    { href: '/calling-agent/ai-calling', label: 'AI Calling Dashboard' },
+    { href: '/calling-agent/call-tracking', label: 'Call Tracking & Leads' },
+    { href: '/calling-agent/operations', label: 'Operations' },
+    { href: '/calling-agent/call-lists', label: 'Call Lists' },
+    { href: '/calling-agent/voice-cloning', label: 'Voice Cloning' },
     { href: '/calling-agent/configure', label: 'Configure Agent' },
     { href: '/calling-agent/number-management', label: 'Number Management' },
     { href: '/calling-agent/analytics', label: 'Analytics' },
-    { href: '/calling-agent/operations', label: 'Operations' },
 ]
 
 const primaryNavItems = [
@@ -41,6 +46,8 @@ const primaryNavItems = [
 ]
 
 const settingsItems = [
+    { href: '/settings/api-keys', label: 'API Keys', icon: Key },
+    { href: '/settings/vendor-selection', label: 'Vendor Selection Agent', icon: Bot },
     { href: '/settings', label: 'General Settings', icon: Settings },
     { href: '/invoice-settings', label: 'Invoice Settings', icon: FileCog },
     { href: '/billing', label: 'Billing', icon: DollarSign },

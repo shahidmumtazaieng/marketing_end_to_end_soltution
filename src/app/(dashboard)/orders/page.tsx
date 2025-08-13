@@ -55,33 +55,10 @@ export type Order = {
     conversation: { speaker: string, text: string }[];
 }
 
-const initialOrders: Order[] = [
-    { id: 'ORD001', task: 'AC Repair', vendorId: 'VEND001', customer: { name: 'Alice Johnson', phone: '111-222-3333', address: '123 Maple St, Springfield' }, vendor: { name: 'John Doe', avatar: 'https://placehold.co/100x100.png' }, amount: 150.00, status: 'Completed', date: '2024-07-25', images: { before: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'], after: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'] }, conversation: [{ speaker: 'Agent', text: 'Confirmed AC repair for tomorrow.' }, { speaker: 'Alice', text: 'Great, thank you!'}] },
-    { id: 'ORD002', task: 'Electrician Service', vendorId: 'VEND002', customer: { name: 'Bob Williams', phone: '444-555-6666', address: '456 Oak Ave, Shelbyville' }, vendor: { name: 'Jane Smith', avatar: 'https://placehold.co/100x100.png' }, amount: 275.50, status: 'Pending', date: '2024-07-26', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD003', task: 'Home Cleaning', vendorId: 'VEND003', customer: { name: 'Charlie Brown', phone: '777-888-9999', address: '789 Pine Rd, Capital City' }, vendor: { name: 'CleanCo', avatar: 'https://placehold.co/100x100.png' }, amount: 300.00, status: 'On the Way', date: '2024-07-26', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD004', task: 'Plumbing Fix', vendorId: 'VEND004', customer: { name: 'Diana Prince', phone: '123-456-7890', address: '101 Justice Way, Themyscira' }, vendor: { name: 'Mike Rowe', avatar: 'https://placehold.co/100x100.png' }, amount: 85.25, status: 'Accepted', date: '2024-07-27', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD005', task: 'Pest Control', vendorId: 'VEND005', customer: { name: 'Eve Adams', phone: '098-765-4321', address: '221B Baker St, London' }, vendor: { name: 'Alpha Services', avatar: 'https://placehold.co/100x100.png' }, amount: 210.00, status: 'Canceled', date: '2024-07-24', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD006', task: 'Painting Job', vendorId: 'VEND001', customer: { name: 'Frank Miller', phone: '555-123-4567', address: '404 Gotham Lane, Gotham' }, vendor: { name: 'John Doe', avatar: 'https://placehold.co/100x100.png' }, amount: 1200.00, status: 'Completed', date: '2024-07-28', images: { before: ['https://placehold.co/600x400.png'], after: ['https://placehold.co/600x400.png'] }, conversation: [] },
-    { id: 'ORD007', task: 'Gardening Service', vendorId: 'VEND002', customer: { name: 'Grace Lee', phone: '555-987-6543', address: '808 Aloha Rd, Honolulu' }, vendor: { name: 'Jane Smith', avatar: 'https://placehold.co/100x100.png' }, amount: 95.00, status: 'Pending', date: '2024-07-28', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD008', task: 'Appliance Repair', vendorId: 'VEND004', customer: { name: 'Heidi Turner', phone: '555-456-1234', address: '123 South Park Ave, South Park' }, vendor: { name: 'Mike Rowe', avatar: 'https://placehold.co/100x100.png' }, amount: 130.00, status: 'Accepted', date: '2024-07-29', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD009', task: 'Roofing Inspection', vendorId: 'VEND003', customer: { name: 'Ivan Rodriguez', phone: '555-789-4561', address: '1000 Ranger Way, Arlington' }, vendor: { name: 'CleanCo', avatar: 'https://placehold.co/100x100.png' }, amount: 450.00, status: 'On the Way', date: '2024-07-29', images: { before: ['https://placehold.co/600x400.png'], after: [] }, conversation: [] },
-    { id: 'ORD010', task: 'Moving Service', vendorId: 'VEND006', customer: { name: 'Judy Alvarez', phone: '555-654-7890', address: 'Lizzie\'s Bar, Night City' }, vendor: { name: 'Beta Repairs', avatar: 'https://placehold.co/100x100.png' }, amount: 650.00, status: 'Canceled', date: '2024-07-27', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD011', task: 'AC Repair', vendorId: 'VEND001', customer: { name: 'Ken Adams', phone: '111-333-4444', address: '742 Evergreen Terrace, Springfield' }, vendor: { name: 'John Doe', avatar: 'https://placehold.co/100x100.png' }, amount: 155.00, status: 'Completed', date: '2024-07-30', images: { before: ['https://placehold.co/600x400.png'], after: ['https://placehold.co/600x400.png'] }, conversation: [] },
-    { id: 'ORD012', task: 'Electrician Service', vendorId: 'VEND002', customer: { name: 'Laura Croft', phone: '444-666-7777', address: 'Croft Manor, Surrey' }, vendor: { name: 'Jane Smith', avatar: 'https://placehold.co/100x100.png' }, amount: 300.00, status: 'Processing', date: '2024-07-30', images: { before: ['https://placehold.co/600x400.png'], after: [] }, conversation: [{speaker: 'Jane', text: 'I have arrived at the location and started the work.'}] },
-    { id: 'ORD013', task: 'Home Cleaning', vendorId: 'VEND003', customer: { name: 'Morgan Blackhand', phone: '777-999-0000', address: 'Arasaka Tower, Night City' }, vendor: { name: 'CleanCo', avatar: 'https://placehold.co/100x100.png' }, amount: 320.00, status: 'On the Way', date: '2024-07-31', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD014', task: 'Plumbing Fix', vendorId: 'VEND004', customer: { name: 'Nancy Drew', phone: '123-789-1234', address: '321 River Heights, River Heights' }, vendor: { name: 'Mike Rowe', avatar: 'https://placehold.co/100x100.png' }, amount: 95.50, status: 'Accepted', date: '2024-07-31', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD015', task: 'Pest Control', vendorId: 'VEND005', customer: { name: 'Oscar Wilde', phone: '098-123-7654', address: '1 Tite Street, Chelsea' }, vendor: { name: 'Alpha Services', avatar: 'https://placehold.co/100x100.png' }, amount: 220.00, status: 'Canceled', date: '2024-07-29', images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD016', task: 'Landscaping', vendorId: 'VEND001', customer: { name: 'Peter Pan', phone: '222-333-5555', address: 'Neverland Ranch, Neverland' }, vendor: { name: 'John Doe', avatar: 'https://placehold.co/100x100.png' }, amount: 450.00, status: 'Processing', date: subDays(new Date(), 1).toISOString().split('T')[0], images: { before: ['https://placehold.co/600x400.png'], after: [] }, conversation: [] },
-    { id: 'ORD017', task: 'Security System Install', vendorId: 'VEND002', customer: { name: 'Quinn Fabray', phone: '666-777-8888', address: '121 Spooner Street, Quahog' }, vendor: { name: 'Jane Smith', avatar: 'https://placehold.co/100x100.png' }, amount: 850.00, status: 'Pending', date: new Date().toISOString().split('T')[0], images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD018', task: 'Window Cleaning', vendorId: 'VEND003', customer: { name: 'Rachel Berry', phone: '999-000-1111', address: '410 West 42nd Street, New York' }, vendor: { name: 'CleanCo', avatar: 'https://placehold.co/100x100.png' }, amount: 180.00, status: 'On the Way', date: new Date().toISOString().split('T')[0], images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD019', task: 'Handyman Service', vendorId: 'VEND004', customer: { name: 'Sam Evans', phone: '321-654-9870', address: '123 Main Street, Lima' }, vendor: { name: 'Mike Rowe', avatar: 'https://placehold.co/100x100.png' }, amount: 120.00, status: 'Accepted', date: addDays(new Date(), 1).toISOString().split('T')[0], images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD020', task: 'Carpet Cleaning', vendorId: 'VEND006', customer: { name: 'Tina Cohen-Chang', phone: '111-222-3333', address: '1 William McKinley High, Lima' }, vendor: { name: 'Beta Repairs', avatar: 'https://placehold.co/100x100.png' }, amount: 250.00, status: 'Completed', date: subDays(new Date(), 5).toISOString().split('T')[0], images: { before: ['https://placehold.co/600x400.png'], after: ['https://placehold.co/600x400.png'] }, conversation: [] },
-    { id: 'ORD021', task: 'AC Repair', vendorId: 'VEND001', customer: { name: 'Walter White', phone: '505-123-4567', address: '308 Negra Arroyo Lane, Albuquerque' }, vendor: { name: 'John Doe', avatar: 'https://placehold.co/100x100.png' }, amount: 175.00, status: 'Completed', date: subDays(new Date(), 10).toISOString().split('T')[0], images: { before: ['https://placehold.co/600x400.png'], after: ['https://placehold.co/600x400.png'] }, conversation: [] },
-    { id: 'ORD022', task: 'Electrician Service', vendorId: 'VEND002', customer: { name: 'Jesse Pinkman', phone: '505-765-4321', address: '9809 Margo Street, Albuquerque' }, vendor: { name: 'Jane Smith', avatar: 'https://placehold.co/100x100.png' }, amount: 320.00, status: 'Pending', date: subDays(new Date(), 2).toISOString().split('T')[0], images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD023', task: 'Home Cleaning', vendorId: 'VEND003', customer: { name: 'Saul Goodman', phone: '505-842-4205', address: '9800 Montgomery Blvd NE, Albuquerque' }, vendor: { name: 'CleanCo', avatar: 'https://placehold.co/100x100.png' }, amount: 400.00, status: 'On the Way', date: new Date().toISOString().split('T')[0], images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD024', task: 'Plumbing Fix', vendorId: 'VEND004', customer: { name: 'Gus Fring', phone: '505-242-7800', address: '12000 Candelaria Rd NE, Albuquerque' }, vendor: { name: 'Mike Rowe', avatar: 'https://placehold.co/100x100.png' }, amount: 95.00, status: 'Accepted', date: addDays(new Date(), 2).toISOString().split('T')[0], images: { before: [], after: [] }, conversation: [] },
-    { id: 'ORD025', task: 'Pest Control', vendorId: 'VEND005', customer: { name: 'Hank Schrader', phone: '505-346-2800', address: '4901 Cumbre Del Sur Ct NE, Albuquerque' }, vendor: { name: 'Alpha Services', avatar: 'https://placehold.co/100x100.png' }, amount: 250.00, status: 'Canceled', date: subDays(new Date(), 8).toISOString().split('T')[0], images: { before: [], after: [] }, conversation: [] },
-];
+// Real-time orders will be fetched from database
+const [orders, setOrders] = useState<Order[]>([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
 
 
 const statusConfig: { [key in OrderStatus]: { icon: React.ElementType, color: string, variant: 'default' | 'secondary' | 'destructive' | 'outline' } } = {
@@ -104,7 +81,10 @@ const defaultDateRange = {
 
 export default function OrdersPage() {
   const { toast } = useToast();
-  const [orders, setOrders] = useState<Order[]>(initialOrders);
+  // Real-time orders from database
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -119,6 +99,48 @@ export default function OrdersPage() {
   const [isVendorModalOpen, setIsVendorModalOpen] = useState(false);
   const router = useRouter();
 
+  // Fetch orders from database on component mount
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  // Real-time data fetching function
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch('/api/orders', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setOrders(result.data);
+        console.log(`✅ Loaded ${result.data.length} orders from database`);
+      } else {
+        throw new Error(result.message || 'Failed to fetch orders');
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      setError(error instanceof Error ? error.message : 'Failed to fetch orders');
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to load orders. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSync = async () => {
     setIsSyncing(true);

@@ -4,6 +4,9 @@ import {
   DollarSign,
   Phone,
   Users,
+  TrendingUp,
+  Loader2,
+  Activity,
 } from 'lucide-react';
 import {
   Card,
@@ -25,24 +28,99 @@ import {
 import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
 import { DatePickerWithRange } from '@/components/date-range-picker';
-
-const revenueData = [
-  { month: 'Jan', revenue: 4000 },
-  { month: 'Feb', revenue: 3000 },
-  { month: 'Mar', revenue: 5000 },
-  { month: 'Apr', revenue: 4500 },
-  { month: 'May', revenue: 6000 },
-  { month: 'Jun', revenue: 7500 },
-];
-
-const performanceData = [
-  { name: 'Vendor A', orders: 40, color: 'hsl(var(--primary))' },
-  { name: 'Vendor B', orders: 30, color: 'hsl(var(--accent))' },
-  { name: 'Vendor C', orders: 50, color: '#82ca9d' },
-  { name: 'Vendor D', orders: 20, color: '#ffc658' },
-];
+import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from 'react';
+import { DashboardMetrics } from '@/lib/services/dashboardAnalyticsService';
 
 export default function Dashboard() {
+  const { toast } = useToast();
+
+  // State management
+  const [analytics, setAnalytics] = useState<DashboardMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Mock user ID - in real app, get from auth context
+  const userId = 'user-123';
+
+  // Load analytics on component mount
+  useEffect(() => {
+    loadDashboardAnalytics();
+  }, []);
+
+  // Load real analytics data
+  const loadDashboardAnalytics = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(`/api/dashboard-analytics?user_id=${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setAnalytics(result.data);
+        console.log('✅ Dashboard analytics loaded successfully');
+      } else {
+        throw new Error(result.message || 'Failed to load analytics');
+      }
+    } catch (error) {
+      console.error('Error loading dashboard analytics:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to load dashboard analytics. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  };
+
+  // Format percentage
+  const formatPercentage = (value: number) => {
+    const sign = value >= 0 ? '+' : '';
+    return `${sign}${value.toFixed(1)}%`;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold font-headline tracking-tight">
+              Welcome Back!
+            </h1>
+            <p className="text-muted-foreground">
+              Loading your business analytics...
+            </p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center py-12">
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span>Loading dashboard analytics...</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -64,27 +142,27 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
         <StatCard
           title="Total Revenue"
-          value="$45,231.89"
-          helperText="+20.1% from last month"
+          value={analytics ? formatCurrency(analytics.total_revenue) : '$0.00'}
+          helperText={analytics ? `${formatPercentage(analytics.revenue_growth)} from last month` : 'Loading...'}
           icon={DollarSign}
         />
         <StatCard
           title="Total Orders"
-          value="+2350"
-          helperText="+180.1% from last month"
-          icon={Users} // Changed icon
-        />
-        <StatCard
-          title="Total Vendors"
-          value="+12"
-          helperText="+19% from last month"
+          value={analytics ? analytics.total_orders.toString() : '0'}
+          helperText={analytics ? `${formatPercentage(analytics.orders_growth)} from last month` : 'Loading...'}
           icon={Users}
         />
         <StatCard
-          title="Call Success Rate"
-          value="82%"
-          helperText="+2% from last month"
-          icon={Phone}
+          title="Active Orders"
+          value={analytics ? analytics.active_orders.toString() : '0'}
+          helperText={analytics ? `${analytics.completed_orders} completed` : 'Loading...'}
+          icon={Activity}
+        />
+        <StatCard
+          title="Vendor Utilization"
+          value={analytics ? `${analytics.vendor_utilization.toFixed(1)}%` : '0%'}
+          helperText={analytics ? `${formatPercentage(analytics.vendor_growth)} vendor growth` : 'Loading...'}
+          icon={TrendingUp}
         />
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
@@ -94,7 +172,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={revenueData}>
+              <LineChart data={analytics?.revenue_chart || []}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                 <YAxis stroke="hsl(var(--muted-foreground))" />
